@@ -23,7 +23,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/include/git_sha1.cmake)
 #####################
 
 if (WIN32)
-	set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wno-unused-parameter -Wno-sign-compare -Wno-deprecated-declarations -fomit-frame-pointer -std=c++11")
+	set(CMAKE_CXX_FLAGS_RELEASE "-O3 -fomit-frame-pointer -std=c++11")
 	set(CMAKE_CXX_FLAGS_DEBUG   "-std=c++11")
 else()
 	set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wall -Wextra -Wno-unused-parameter -Wno-sign-compare -Wno-deprecated-declarations -fomit-frame-pointer -fPIC -std=c++11")
