@@ -1,0 +1,9 @@
+[submodule "cmake"]
+	path = cmake
+	url = https://github.com/funkey/cmake
+[submodule "modules/cohear"]
+	path = modules/cohear
+	url = https://github.com/funkey/cohear
+[submodule "modules/scopegraph"]
+	path = modules/scopegraph
+	url = https://github.com/funkey/scopegraph
