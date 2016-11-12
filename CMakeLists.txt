@@ -53,4 +53,4 @@ configure_file(
   ${PROJECT_BINARY_DIR}/config.h
 )
 
-define_module(yantarantana BINARY SOURCES yantarantana.cpp LINKS scopegraph)
+define_module(yantarantana BINARY SOURCES yantarantana.cpp LINKS sg_gui)

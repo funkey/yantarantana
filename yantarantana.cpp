@@ -1,40 +1,35 @@
 #include <iostream>
 #include <memory>
-#include <scopegraph/Agent.h>
-#include <scopegraph/Scope.h>
+#include <sg_gui/Window.h>
 
-class HelloSignal : public sg::Signal {};
-
-class HelloAgent : public sg::Agent<HelloAgent, sg::Provides<HelloSignal>> {
-
-public:
-
-	void saySomething() {
-
-		send<HelloSignal>();
-	}
-};
-
-class Listener : public sg::Agent<Listener, sg::Accepts<HelloSignal>> {
+class TestView : public sg::Agent<
+		TestView,
+		sg::Accepts<
+			sg_gui::Draw
+		>
+>{
 
 public:
 
-	void onSignal(HelloSignal& signal) {
+	void onSignal(sg_gui::Draw& signal) {
 
-		std::cout << "received HelloSignal" << std::endl;
+		glBegin(GL_LINES);
+		glVertex2f(0, 0);
+		glVertex2f(100, 0);
+		glVertex2f(100, 100);
+		glVertex2f(0, 100);
+		glVertex2f(0, 0);
+		glVertex2f(100, 100);
+		glEnd();
 	}
 };
-
-class Scope : public sg::Scope<Scope> {};
 
 int main(int argc, char** argv) {
 
-	auto scope      = std::make_shared<Scope>();
-	auto helloAgent = std::make_shared<HelloAgent>();
-	auto listener   = std::make_shared<Listener>();
+	auto window = std::make_shared<sg_gui::Window>("yantarantana");
+	auto test   = std::make_shared<TestView>();
 
-	scope->add(helloAgent);
-	scope->add(listener);
+	window->add(test);
 
-	helloAgent->saySomething();
+	window->processEvents();
 }
