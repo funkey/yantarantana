@@ -10,3 +10,6 @@
 [submodule "modules/sg_gui"]
 	path = modules/sg_gui
 	url = https://github.com/funkey/sg_gui
+[submodule "modules/util"]
+	path = modules/util
+	url = https://github.com/funkey/util
