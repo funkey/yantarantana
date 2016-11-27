@@ -23,13 +23,48 @@ include(${CMAKE_SOURCE_DIR}/cmake/include/git_sha1.cmake)
 #####################
 
 if (WIN32)
-	set(CMAKE_CXX_FLAGS_RELEASE "-O3 -fomit-frame-pointer -std=c++11")
-	set(CMAKE_CXX_FLAGS_DEBUG   "-std=c++11")
-	set(SYSTEM_WINDOWS 1)
+  set(CMAKE_CXX_FLAGS_RELEASE "/O3")
+  set(SYSTEM_WINDOWS 1)
+  if(MSVC)
+    # Default to statically-linked runtime.
+    if("${MSVC_RUNTIME}" STREQUAL "")
+      set(MSVC_RUNTIME "static")
+    endif()
+    # Set compiler options.
+    set(variables
+      CMAKE_C_FLAGS_DEBUG
+      CMAKE_C_FLAGS_MINSIZEREL
+      CMAKE_C_FLAGS_RELEASE
+      CMAKE_C_FLAGS_RELWITHDEBINFO
+      CMAKE_CXX_FLAGS_DEBUG
+      CMAKE_CXX_FLAGS_MINSIZEREL
+      CMAKE_CXX_FLAGS_RELEASE
+      CMAKE_CXX_FLAGS_RELWITHDEBINFO
+    )
+    if(${MSVC_RUNTIME} STREQUAL "static")
+      message(STATUS
+        "MSVC uses static runtime"
+      )
+      foreach(variable ${variables})
+        if(${variable} MATCHES "/MD")
+          string(REGEX REPLACE "/MD" "/MT" ${variable} "${${variable}}")
+        endif()
+      endforeach()
+    else()
+      message(STATUS
+        "MSVC uses dynamic runtime"
+      )
+      foreach(variable ${variables})
+        if(${variable} MATCHES "/MT")
+          string(REGEX REPLACE "/MT" "/MD" ${variable} "${${variable}}")
+        endif()
+      endforeach()
+    endif()
+  endif()
 else()
-	set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wall -Wextra -Wno-unused-parameter -Wno-sign-compare -Wno-deprecated-declarations -fomit-frame-pointer -fPIC -std=c++11")
-	set(CMAKE_CXX_FLAGS_DEBUG   "-g -Wall -Wextra -fPIC -std=c++11")
-	set(SYSTEM_UNIX 1)
+  set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wall -Wextra -Wno-unused-parameter -Wno-sign-compare -Wno-deprecated-declarations -fomit-frame-pointer -fPIC -std=c++11")
+  set(CMAKE_CXX_FLAGS_DEBUG   "-g -Wall -Wextra -fPIC -std=c++11")
+  set(SYSTEM_UNIX 1)
 endif()
 if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Release or Debug" FORCE)
@@ -55,4 +90,4 @@ configure_file(
   ${PROJECT_BINARY_DIR}/config.h
 )
 
-define_module(yantarantana BINARY SOURCES yantarantana.cpp LINKS sg_gui)
+define_module(yantarantana BINARY SOURCES yantarantana.cpp LINKS sg_gui skia)
