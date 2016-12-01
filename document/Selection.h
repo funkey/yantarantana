@@ -2,7 +2,6 @@
 #define YANTA_SELECTION_H__
 
 #include <util/tree.h>
-#include <util/typelist.h>
 
 #include "DocumentElementContainer.h"
 #include "Page.h"
