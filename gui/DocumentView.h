@@ -3,7 +3,7 @@
 
 #include <scopegraph/Agent.h>
 #include <document/Document.h>
-#include <gui/TorusTexture.h>
+#include <gui/TexturePyramid.h>
 #include <gui/SkiaDocumentPainter.h>
 #include <sg_gui/GuiSignals.h>
 
@@ -30,7 +30,7 @@ public:
 private:
 
 	std::shared_ptr<Document> _document;
-	std::shared_ptr<TorusTexture> _texture;
+	TexturePyramid            _texture;
 
 	std::shared_ptr<SkiaDocumentPainter> _documentPainter;
 	std::shared_ptr<SkiaDocumentPainter> _documentCleanUpPainter;
