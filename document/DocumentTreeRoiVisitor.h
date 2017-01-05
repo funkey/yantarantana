@@ -6,7 +6,7 @@
 #include "DocumentElementContainer.h"
 
 /**
- * Base class for document tree visitors, that only need to visit elements in a 
+ * Base class for document tree visitors that only need to visit elements in a 
  * specified region of interest.
  */
 class DocumentTreeRoiVisitor : public DocumentTreeTransformationVisitor {

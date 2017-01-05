@@ -81,6 +81,7 @@ include_directories(${PROJECT_SOURCE_DIR})
 
 add_subdirectory(modules)
 add_subdirectory(document)
+add_subdirectory(gui)
 
 ###############
 # config file #
@@ -91,4 +92,4 @@ configure_file(
   ${PROJECT_BINARY_DIR}/config.h
 )
 
-define_module(yantarantana BINARY SOURCES yantarantana.cpp LINKS document sg_gui skia)
+define_module(yantarantana BINARY SOURCES yantarantana.cpp LINKS document gui freetype)

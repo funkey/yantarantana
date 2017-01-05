@@ -1,55 +1,25 @@
 #include <iostream>
 #include <memory>
 #include <sg_gui/Window.h>
+#include <sg_gui/ZoomView.h>
+#include <gui/DocumentView.h>
 #include <util/ProgramOptions.h>
 #include <util/Logger.h>
 #include <util/exceptions.h>
 
-class TestView : public sg::Agent<
-		TestView,
-		sg::Accepts<
-			sg_gui::Draw,
-			sg_gui::PenDown,
-			sg_gui::PenUp,
-			sg_gui::FingerDown,
-			sg_gui::FingerUp
-		>
->{
+class TestView : public sg::Agent<TestView, sg::Accepts<sg_gui::Draw>> {
 
 public:
 
 	void onSignal(sg_gui::Draw& signal) {
 
-		std::cout << "[Test] drawing" << std::endl;
-
 		glBegin(GL_LINES);
-		glVertex2f(0, 0);
-		glVertex2f(100, 0);
-		glVertex2f(100, 100);
-		glVertex2f(0, 100);
-		glVertex2f(0, 0);
-		glVertex2f(100, 100);
+		glVertex2d(0,0);
+		glVertex2d(100,0);
+		glVertex2d(100,100);
+		glVertex2d(0,100);
+		glVertex2d(0,0);
 		glEnd();
-	}
-
-	void onSignal(sg_gui::PenDown& signal) {
-
-		std::cout << "pen down at " << signal.ray << ", button " << signal.button << std::endl;
-	}
-
-	void onSignal(sg_gui::PenUp& signal) {
-
-		std::cout << "pen up at " << signal.ray << ", button " << signal.button << std::endl;
-	}
-
-	void onSignal(sg_gui::FingerDown& signal) {
-
-		std::cout << "finger " << signal.id << " down at " << signal.ray << std::endl;
-	}
-
-	void onSignal(sg_gui::FingerUp& signal) {
-
-		std::cout << "finger " << signal.id << " up at " << signal.ray << std::endl;
 	}
 };
 
@@ -61,11 +31,25 @@ int main(int argc, char** argv) {
 		logger::LogManager::init();
 
 		sg_gui::WindowMode mode;
+#ifdef NDEBUG
 		mode.fullscreen = true;
+#endif
 		auto window = std::make_shared<sg_gui::Window>("yantarantana", mode);
-		auto test = std::make_shared<TestView>();
+		auto zoomView = std::make_shared<sg_gui::ZoomView>();
+		auto documentView = std::make_shared<DocumentView>();
+		auto testView = std::make_shared<TestView>();
 
-		window->add(test);
+		window->add(zoomView);
+		zoomView->add(documentView);
+		zoomView->add(testView);
+
+		auto document = std::make_shared<Document>();
+		document->createPage(util::point<double,2>(0,0), util::point<double,2>(100,100));
+		document->createPage(util::point<double,2>(100,100), util::point<double,2>(100,100));
+		document->createNewStroke(util::point<double,2>(0,0), 1.0, 0);
+		document->addStrokePoint(util::point<double,2>(100,100), 1.0, 1);
+		document->finishCurrentStroke();
+		documentView->setDocument(document);
 
 		window->processEvents();
 
